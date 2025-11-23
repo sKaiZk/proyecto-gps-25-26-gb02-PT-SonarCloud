@@ -95,18 +95,49 @@ def get_track(track_id):  # noqa: E501
     return 'do some magic!'
 
 
-def update_track(body, track_id):  # noqa: E501
-    """Updates a track from the database with form data.
+def update_track(body, track_id):
+    """Updates a track in the database"""
+    # Verificar autenticación defensiva
+    authorized, error_response = check_auth(required_scopes=['write:tracks'])
+    if not authorized:
+        return error_response
+    
+    if not connexion.request.is_json:
+        return Error(code="400", message="Invalid JSON"), 400
 
-     # noqa: E501
+    track = Track.from_dict(connexion.request.get_json())
+    conexion = None
 
-    :param body: 
-    :type body: dict | bytes
-    :param track_id: 
-    :type track_id: int
+    try:
+        conexion = dbConectar()
+        if not conexion:
+            return Error(code="500", message="Database connection failed"), 500
 
-    :rtype: None
-    """
-    if connexion.request.is_json:
-        body = Track.from_dict(connexion.request.get_json())  # noqa: E501
-    return 'do some magic!'
+        # Decodificar el base64 a bytes para almacenar en BYTEA
+        try:
+            track_bytes = base64.b64decode(track.track)
+        except Exception as e:
+            return Error(code="400", message="Invalid base64 encoding"), 400
+
+        with conexion.cursor() as cur:
+            query = "UPDATE tracks SET track = %s WHERE idtrack = %s;"
+            cur.execute(query, [DB.Binary(track_bytes), track_id])
+
+            if cur.rowcount == 0:
+                conexion.rollback()
+                return Error(code="404", message="Track not found"), 404
+
+            conexion.commit()
+
+        return '', 204
+
+    except Exception as e:
+        if conexion:
+            conexion.rollback()
+        print(f"Error al actualizar track: {e}")
+        return Error(code="500", message="Database error"), 500
+
+    finally:
+        if conexion:
+            dbDesconectar(conexion)
+
