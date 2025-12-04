@@ -7,7 +7,7 @@ from flask import send_file
 from swagger_server.models.error import Error  # noqa: E501
 from swagger_server.models.track import Track  # noqa: E501
 from swagger_server import util
-from swagger_server.controllers.dbconx.tempName import dbConectar, dbDesconectar
+from swagger_server.controllers.dbconx.tempName import dbconectar, dbdesconectar
 from swagger_server.controllers.authorization_controller import is_valid_token
 import psycopg2 as DB
 
@@ -37,7 +37,7 @@ def add_track(body):
     conexion = None
 
     try:
-        conexion = dbConectar()
+        conexion = dbconectar()
         if not conexion:
             return Error(code="500", message="Database connection failed"), 500
 
@@ -66,7 +66,7 @@ def add_track(body):
 
     finally:
         if conexion:
-            dbDesconectar(conexion)
+            dbdesconectar(conexion)
 
 
 def delete_track(track_id):
@@ -78,7 +78,7 @@ def delete_track(track_id):
     
     conexion = None
     try:
-        conexion = dbConectar()
+        conexion = dbconectar()
         if not conexion:
             return Error(code="500", message="Database connection failed"), 500
 
@@ -101,7 +101,7 @@ def delete_track(track_id):
 
     finally:
         if conexion:
-            dbDesconectar(conexion)
+            dbdesconectar(conexion)
 
 
 def get_track(track_id):
@@ -113,7 +113,7 @@ def get_track(track_id):
     
     conexion = None
     try:
-        conexion = dbConectar()
+        conexion = dbconectar()
         if not conexion:
             return Error(code="500", message="Database connection failed"), 500
 
@@ -138,7 +138,7 @@ def get_track(track_id):
 
     finally:
         if conexion:
-            dbDesconectar(conexion)
+            dbdesconectar(conexion)
 
 
 def update_track(body, track_id):
@@ -155,7 +155,7 @@ def update_track(body, track_id):
     conexion = None
 
     try:
-        conexion = dbConectar()
+        conexion = dbconectar()
         if not conexion:
             return Error(code="500", message="Database connection failed"), 500
 
@@ -185,5 +185,5 @@ def update_track(body, track_id):
 
     finally:
         if conexion:
-            dbDesconectar(conexion)
+            dbdesconectar(conexion)
 
