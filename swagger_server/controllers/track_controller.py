@@ -23,7 +23,7 @@ def check_auth(required_scopes=None):
         return False, (error, 401)
     return True, None
 
-def add_track(body):
+def add_track():
     """Add a new track to the database"""
     # Verificar autenticación defensiva
     authorized, error_response = check_auth(required_scopes=['write:tracks'])
@@ -141,7 +141,7 @@ def get_track(track_id):
             dbdesconectar(conexion)
 
 
-def update_track(body, track_id):
+def update_track(track_id):
     """Updates a track in the database"""
     # Verificar autenticación defensiva
     authorized, error_response = check_auth(required_scopes=['write:tracks'])
