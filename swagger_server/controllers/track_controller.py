@@ -16,7 +16,7 @@ SCOPE_WRITE_TRACKS = 'write:tracks'
 SCOPE_READ_TRACKS = 'read:tracks'
 
 
-def check_auth(required_scopes=None):
+def check_auth():
     """
     Verifica autenticación defensiva (backup de Connexion).
     Devuelve (authorized, error_response) tuple.
@@ -30,7 +30,7 @@ def check_auth(required_scopes=None):
 def add_track():
     """Add a new track to the database"""
     # Verificar autenticación defensiva
-    authorized, error_response = check_auth(required_scopes=[SCOPE_WRITE_TRACKS])
+    authorized, error_response = check_auth()
     if not authorized:
         return error_response
     
@@ -76,7 +76,7 @@ def add_track():
 def delete_track(track_id):
     """Deletes a track"""
     # Verificar autenticación defensiva
-    authorized, error_response = check_auth(required_scopes=[SCOPE_WRITE_TRACKS])
+    authorized, error_response = check_auth()
     if not authorized:
         return error_response
     
@@ -111,7 +111,7 @@ def delete_track(track_id):
 def get_track(track_id):
     """Gets a track file directly (returns audio in base64)"""
     # Verificar autenticación defensiva
-    authorized, error_response = check_auth(required_scopes=[SCOPE_READ_TRACKS])
+    authorized, error_response = check_auth()
     if not authorized:
         return error_response
     
@@ -148,7 +148,7 @@ def get_track(track_id):
 def update_track(track_id):
     """Updates a track in the database"""
     # Verificar autenticación defensiva
-    authorized, error_response = check_auth(required_scopes=[SCOPE_WRITE_TRACKS])
+    authorized, error_response = check_auth()
     if not authorized:
         return error_response
     
